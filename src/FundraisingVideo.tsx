@@ -213,6 +213,7 @@ const Scene5_Outro = () => {
 };
 
 export const FundraisingVideo: React.FC = () => {
+    const frame = useCurrentFrame();
     return (
         <AbsoluteFill style={{ backgroundColor: COLOR_BG }}>
             <Sequence from={0} durationInFrames={150}>
@@ -238,7 +239,7 @@ export const FundraisingVideo: React.FC = () => {
                 textAlign: 'center',
                 fontFamily,
                 fontSize: 20,
-                color: useCurrentFrame() >= 750 ? '#FFFFFF' : COLOR_TEXT,
+                color: frame >= 750 ? '#FFFFFF' : COLOR_TEXT,
                 opacity: 0.5,
                 fontWeight: 500,
                 letterSpacing: 1

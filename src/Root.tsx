@@ -2,6 +2,7 @@ import "./index.css";
 import { Composition } from "remotion";
 import { MyComposition } from "./Composition";
 import { FundraisingVideo } from "./FundraisingVideo";
+import { EventBackdropVideo } from "./EventBackdropVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -17,6 +18,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="FundraisingVideo"
         component={FundraisingVideo}
+        durationInFrames={900}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="EventBackdropVideo"
+        component={EventBackdropVideo}
         durationInFrames={900}
         fps={30}
         width={1920}
