@@ -1,7 +1,7 @@
 import React from 'react';
-import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interpolate } from 'remotion';
+import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, spring, interpolate, Img, staticFile } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/Montserrat';
-import { Calendar, Clock, MapPin, Heart } from 'lucide-react';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 
 const { fontFamily } = loadFont();
 
@@ -77,21 +77,36 @@ const Scene1_Intro = () => {
 
 const Scene2_Cause = () => {
     const frame = useCurrentFrame();
-    const scale = interpolate(frame, [0, 100], [1, 1.05]);
+    const { fps } = useVideoConfig();
+    const scale = interpolate(frame, [0, 150], [1, 1.1]);
+    const statueOpacity = interpolate(frame, [20, 50], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+    const statueMove = interpolate(frame, [20, 60], [100, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
     return (
         <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_BG }}>
              <div style={{ 
                 transform: `scale(${scale})`, 
                 display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center' 
+                flexDirection: 'row', 
+                alignItems: 'center',
+                gap: 60
             }}>
-                <SubtitleText delay={0} fontSize={40}>Help us build</SubtitleText>
-                <div style={{ margin: '40px 0' }}>
-                    <Heart color={COLOR_PRIMARY} size={120} fill={COLOR_PRIMARY} style={{ opacity: 0.2 }} />
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <SubtitleText delay={0} fontSize={40}>Help us build</SubtitleText>
+                    <TitleText delay={20} fontSize={90} textAlign="left">THE VIRGIN MARY<br/>STATUE</TitleText>
                 </div>
-                <TitleText delay={20} fontSize={90}>THE VIRGIN MARY<br/>STATUE</TitleText>
+                <div style={{ 
+                    opacity: statueOpacity,
+                    transform: `translateX(${statueMove}px)`
+                }}>
+                    <Img 
+                        src={staticFile('statue.png')} 
+                        style={{ 
+                            height: 600,
+                            filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.2))'
+                        }} 
+                    />
+                </div>
             </div>
         </AbsoluteFill>
     );
@@ -173,10 +188,26 @@ const Scene4_Details = () => {
 };
 
 const Scene5_Outro = () => {
+    const frame = useCurrentFrame();
+    const statueOpacity = interpolate(frame, [0, 40], [0, 0.4], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+    const statueScale = interpolate(frame, [0, 150], [1.2, 1.3]);
+
     return (
-        <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY }}>
-            <TitleText color="#FFFFFF" fontSize={70} delay={10}>YOUR CONTRIBUTION<br/>MATTERS</TitleText>
-            <SubtitleText color={COLOR_ACCENT} fontSize={40} delay={40}>THANK YOU!</SubtitleText>
+        <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR_PRIMARY, overflow: 'hidden' }}>
+            <div style={{
+                position: 'absolute',
+                right: -100,
+                bottom: -100,
+                opacity: statueOpacity,
+                transform: `scale(${statueScale})`,
+                pointerEvents: 'none'
+            }}>
+                <Img src={staticFile('statue.png')} style={{ height: 1000 }} />
+            </div>
+            <div style={{ zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <TitleText color="#FFFFFF" fontSize={70} delay={10}>YOUR CONTRIBUTION<br/>MATTERS</TitleText>
+                <SubtitleText color={COLOR_ACCENT} fontSize={40} delay={40}>THANK YOU!</SubtitleText>
+            </div>
         </AbsoluteFill>
     );
 };
@@ -199,6 +230,21 @@ export const FundraisingVideo: React.FC = () => {
             <Sequence from={750} durationInFrames={150}>
                 <Scene5_Outro />
             </Sequence>
+            <div style={{
+                position: 'absolute',
+                bottom: 40,
+                left: 0,
+                right: 0,
+                textAlign: 'center',
+                fontFamily,
+                fontSize: 20,
+                color: useCurrentFrame() >= 750 ? '#FFFFFF' : COLOR_TEXT,
+                opacity: 0.5,
+                fontWeight: 500,
+                letterSpacing: 1
+            }}>
+                Edited by Jean Leon
+            </div>
         </AbsoluteFill>
     );
 };
